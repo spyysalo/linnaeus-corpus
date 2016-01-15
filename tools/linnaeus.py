@@ -1,6 +1,7 @@
 import io
 
 from os import path
+from glob import glob
 
 class FormatError(Exception):
     pass
@@ -98,20 +99,17 @@ def load_document(fn):
         text = f.read()
     return Document(docid, text)
 
-def uniq(iterable):
-    # http://stackoverflow.com/a/480227
-    seen = set()
-    return [i for i in iterable if not (i in seen or seen.add(i))]
-
 def load_linnaeus(annfn, docdir):
     """Read LINNAEUS corpus data from given annotation file and directory
     containing the corpus document texts, return list of Document objects.
     """
     annotations = load_annotations(annfn)
-    docids = uniq(sorted([a.docid for a in annotations]))
-    doc = { d: load_document(path.join(docdir, d+'.txt')) for d in docids }
+    doc_by_id = {}
+    for fn in glob(path.join(docdir, '*.txt')):
+        doc = load_document(fn)
+        doc_by_id[doc.id] = doc
     for a in annotations:
-        doc[a.docid].annotations.append(a)
-    for d in doc.values():
+        doc_by_id[a.docid].annotations.append(a)
+    for d in doc_by_id.values():
         d.verify_annotations()
-    return doc.values()
+    return doc_by_id.values()
