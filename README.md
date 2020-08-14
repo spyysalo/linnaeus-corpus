@@ -1,19 +1,27 @@
-# linnaeus-corpus
+# LINNAEUS corpus tools
 
 Work related to the LINNAEUS corpus.
 
 ## Converting LINNAEUS to standoff
 
-Download `manual-corpus-species-1.0.tar.gz` from http://linnaeus.sourceforge.net/
+Download `manual-corpus-species-1.1.tar.gz` from http://linnaeus.sourceforge.net/ and unpack with `tar xzf manual-corpus-species-1.1.tar.gz` or
 
-Unpack, convert to standoff, and create copies of standoff split to train, devel and test subdirectories:
+```
+wget https://github.com/spyysalo/linnaeus-corpus-data/archive/v1.1.tar.gz \
+    -O manual-corpus-species-1.1.tar.gz
+tar xvzf manual-corpus-species-1.1.tar.gz
+mv linnaeus-corpus-data-1.1 manual-corpus-species-1.1
+```
 
-    tar xzf manual-corpus-species-1.0.tar.gz
-    mkdir standoff
-    python tools/linnaeus2ann.py manual-corpus-species-1.0/{tags.tsv,txt} standoff
-    for s in train devel test; do
-        mkdir -p split-standoff/$s
-        cat split/${s}.txt | while read f; do
-            cp standoff/${f}.* split-standoff/$s
-        done
+Convert to standoff and create copies of standoff split to train, devel and test subdirectories:
+
+```
+mkdir standoff
+python tools/linnaeus2ann.py manual-corpus-species-1.0/{tags.tsv,txt} standoff
+for s in train devel test; do
+    mkdir -p split-standoff/$s
+    cat split/${s}.txt | while read f; do
+        cp standoff/${f}.* split-standoff/$s
     done
+done
+```
