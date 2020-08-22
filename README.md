@@ -25,3 +25,13 @@ for s in train devel test; do
     done
 done
 ```
+
+Convert to CoNLL format (NOTE: does not preserve original annotation offsets that do not match token boundaries)
+
+```
+git clone https://github.com/spyysalo/standoff2conll
+mkdir conll
+for s in train devel test; do
+    python3 standoff2conll/standoff2conll.py split-standoff/$s > conll/$s.tsv
+done
+```
