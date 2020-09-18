@@ -17,11 +17,21 @@ Convert to standoff and create copies of standoff split to train, devel and test
 
 ```
 mkdir standoff
-python tools/linnaeus2ann.py manual-corpus-species-1.0/{tags.tsv,txt} standoff
+python tools/linnaeus2ann.py manual-corpus-species-1.1/{tags.tsv,txt} standoff
 for s in train devel test; do
     mkdir -p split-standoff/$s
     cat split/${s}.txt | while read f; do
         cp standoff/${f}.* split-standoff/$s
     done
+done
+```
+
+Convert to CoNLL format (NOTE: does not preserve original annotation offsets that do not match token boundaries)
+
+```
+git clone https://github.com/spyysalo/standoff2conll
+mkdir conll
+for s in train devel test; do
+    python3 standoff2conll/standoff2conll.py split-standoff/$s > conll/$s.tsv
 done
 ```
